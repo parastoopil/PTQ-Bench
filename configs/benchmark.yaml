@@ -1,0 +1,42 @@
+# YOLO-PTQ-Bench default benchmark configuration
+
+benchmark:
+  models:
+    - yolov8n
+    - yolov8s
+    - yolov8m
+  precisions:
+    - fp32
+    - fp16
+  device: cuda
+  image_size: 640
+  n_warmup: 10
+  n_runs: 300
+
+detector:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+
+tracker:
+  high_thresh: 0.50
+  low_thresh: 0.10
+  iou_thresh: 0.30
+  max_age: 30
+  min_hits: 3
+
+output:
+  dir: results
+  save_plots: true
+  save_json: true
+  save_csv: true
+
+quantization:
+  fp16:
+    description: "Half-precision GPU inference using torch.float16"
+    target_device: cuda
+  int8_dynamic:
+    description: "Dynamic-range INT8 quantization via torch.quantization.quantize_dynamic"
+    target_layers:
+      - torch.nn.Conv2d
+      - torch.nn.Linear
+    target_device: cpu
